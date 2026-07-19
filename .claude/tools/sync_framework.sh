@@ -5,9 +5,11 @@
 # is developed in the open at TEMPLATE_REPO. A vault is a private instance of it.
 # This tool moves framework files between the two, and nothing else:
 #
-#   - it NEVER touches vault content (inbox/, wiki/, _attachments/), and
+#   - it NEVER touches vault content (inbox/, wiki/, _attachments/),
 #   - it NEVER commits or pushes — every change lands uncommitted, for a human
-#     to review and commit.
+#     to review and commit, and
+#   - it REFUSES to overwrite files carrying uncommitted local edits — commit
+#     or stash them first, so nothing of yours can ever be lost.
 #
 # Usage (run from inside your vault):
 #   sync_framework.sh update              copy the latest published framework into this vault
@@ -31,7 +33,7 @@ DEST=""
 case "$MODE" in
   update|diff) ;;
   export) DEST="${1:?export needs the path to a template checkout}"; shift ;;
-  *) sed -n '2,18p' "$0"; exit 2 ;;
+  *) sed -n '2,19p' "$0"; exit 2 ;;
 esac
 [ "${1:-}" = "--repo" ] && TEMPLATE_REPO="${2:?--repo needs a URL}"
 
@@ -65,11 +67,35 @@ if [ "$MODE" = "update" ] || [ "$MODE" = "diff" ]; then
   [ -n "$added" ]   && { echo "New in template:";   printf '%s' "$added"   | sed 's/^/  + /'; }
   [ -n "$changed" ] && { echo "Differs from template:"; printf '%s' "$changed" | sed 's/^/  ~ /'; }
 
+  # Files that differ from the template AND carry uncommitted local edits would
+  # be unrecoverable if overwritten (nothing auto-commits framework files).
+  dirty=""
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    if [ -n "$(git status --porcelain -- "$f" 2>/dev/null)" ]; then
+      dirty="$dirty$f"$'\n'
+    fi
+  done < <(printf '%s' "$changed")
+
   if [ "$MODE" = "diff" ]; then
+    if [ -n "$dirty" ]; then
+      echo
+      echo "Note: these carry uncommitted local edits — update will refuse to touch them:"
+      printf '%s' "$dirty" | sed 's/^/  ! /'
+    fi
     echo
     echo "Diff only — nothing written. Local edits meant for the template? export them first:"
     echo "  $0 export <template-checkout>"
     exit 0
+  fi
+
+  if [ -n "$dirty" ]; then
+    echo >&2
+    echo "fatal: refusing to overwrite files with uncommitted local edits:" >&2
+    printf '%s' "$dirty" | sed 's/^/  ! /' >&2
+    echo "Commit or stash them, then re-run. Meant for the template? export them instead:" >&2
+    echo "  $0 export <template-checkout>" >&2
+    exit 1
   fi
 
   printf '%s%s' "$added" "$changed" | while IFS= read -r f; do

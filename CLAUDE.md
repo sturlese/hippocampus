@@ -87,6 +87,8 @@ The framework — `CLAUDE.md`, `.claude/`, `_templates/`, `docs/`, `README.md`, 
 
 If a session edits framework files **in a vault**, remind the user that the change lives in the wrong repo and should be ported: `.claude/tools/sync_framework.sh export <template-checkout>`, then commit and PR there. To bring the latest published framework into a vault: `.claude/tools/sync_framework.sh update`. Neither command ever touches content or commits anything.
 
+A checkout of the template repo itself is marked by an untracked `.claude/template.local` (create it right after cloning the framework repo). The marker disables vault-only automation — hot-cache enforcement and git auto-commit — and makes `sync_framework.sh` refuse to run `update`/`export` there.
+
 ## Using this vault from other Claude Code projects
 
 Add to that project's CLAUDE.md:

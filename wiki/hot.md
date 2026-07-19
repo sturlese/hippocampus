@@ -13,7 +13,7 @@ sources: []
 
 ## Last Updated
 
-2026-07-11. Vault scaffolded. No content ingested yet.
+Day zero — vault scaffolded, nothing ingested yet. (This cache refreshes automatically after the first session that changes the wiki.)
 
 ## Key Recent Facts
 

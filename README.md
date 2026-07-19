@@ -29,7 +29,7 @@ This substrate — markdown + YAML frontmatter, typed pages, `index.md`/`log.md`
 - 📥 **Inbox workflow** — drop notes in any format or language; originals are preserved untouched in `inbox/_done/` with full provenance links.
 - 🗂️ **Structured consolidation** — typed pages (source / entity / concept / project / note) with flat-YAML frontmatter, wikilinks and per-type templates.
 - 🧭 **The trio** — `index.md` (master catalog), `log.md` (append-only journal), `hot.md` (≤500-word session cache): cheap retrieval, full auditability, session-to-session memory.
-- 🪝 **Session hooks** — the hot cache is auto-injected when a session starts; at session end Claude is forced to refresh it and the vault auto-commits to git.
+- 🪝 **Session hooks** — the hot cache is auto-injected when a session starts; at session end Claude is forced to refresh it and vault content auto-commits to git.
 - ⚔️ **Contradiction flagging** — new info that conflicts with existing pages gets callouts on both sides; nothing is silently overwritten.
 - 🩺 **Deterministic linter** — dead wikilinks, orphan pages, duplicate names, alias collisions, frontmatter gaps, index drift: caught by a script for free, not by burning tokens.
 - 🧱 **Sequential by design** — batch ingests run one source at a time: no locks, no merge frameworks, no silent overwrites. A few extra minutes beat lost knowledge.
@@ -40,19 +40,28 @@ This substrate — markdown + YAML frontmatter, typed pages, `index.md`/`log.md`
 
 **Requirements:** [Claude Code](https://claude.com/claude-code) · git · Python 3.10+ · [Obsidian](https://obsidian.md) (optional, for browsing)
 
+**Option A — GitHub-backed (recommended).** Click **[Use this template](https://github.com/new?template_name=hippocampus&template_owner=sturlese)**, create a **private** repo, then:
+
 ```bash
-# 1. Get the code — click "Use this template" on GitHub (create a PRIVATE repo), or:
-git clone https://github.com/sturlese/hippocampus my-brain
+git clone https://github.com/YOU/my-brain.git
 cd my-brain
-
-# 2. Make it yours
-rm -rf .git && git init && git add -A && git commit -m "My brain, day zero"
-
-# 3. Go
 claude
 ```
 
-Then drop a messy note into `inbox/` and tell Claude: **"ingest"**.
+Fresh history, private remote already wired — backup is just `git push`.
+
+**Option B — local-only.** No GitHub repo of your own; the vault lives only on your machine:
+
+```bash
+git clone https://github.com/sturlese/hippocampus my-brain
+cd my-brain
+rm -rf .git && git init && git add -A && git commit -m "My brain, day zero"
+claude
+```
+
+You can wire a private remote later — see the FAQ.
+
+Either way, drop a messy note into `inbox/` and tell Claude: **"ingest"**.
 
 To browse: Obsidian → *Manage vaults → Open folder as vault* → select the directory. Graph colors, folder colors and search exclusions come pre-configured.
 
@@ -130,10 +139,17 @@ Sonnet with default effort is enough for daily ingest/query/save — the contrac
 
 **Can the wiki be in another language?** Yes — pages are written in English by default; change one line in `CLAUDE.md` → Conventions.
 
-**Multiple machines?** It's a git repo: push to your private remote and pull elsewhere. Hooks and skills travel with it.
+**Multiple machines?** It's a git repo: push to your private remote and pull elsewhere. Hooks and skills travel with it. Started with Option B? Create an empty **private** repo on your host, then `git remote add origin <url> && git push -u origin main`.
 
 **How do I get framework improvements into my existing vault?**
-`.claude/tools/sync_framework.sh update` — it fetches this repo, overlays only framework files (never `inbox/`, `wiki/` or `_attachments/`), and leaves everything uncommitted for you to review. `diff` shows the drift without writing; `export <checkout>` moves your own framework improvements to a local clone of this repo so you can open a PR.
+`.claude/tools/sync_framework.sh update` — it fetches this repo, overlays only framework files (never `inbox/`, `wiki/` or `_attachments/`), and leaves everything uncommitted for you to review. It refuses to overwrite files carrying uncommitted local edits, so nothing of yours can be lost. `diff` shows the drift without writing; `export <checkout>` moves your own framework improvements to a local clone of this repo so you can open a PR.
+
+## Contributing
+
+The framework is developed here, in the open — issues and PRs welcome. Two ways in:
+
+- **Hacking on this repo directly:** clone it and run `touch .claude/template.local` first. The marker (gitignored) tells the hooks this checkout is a template, not a vault, so hot-cache enforcement and auto-commits stay off.
+- **You improved the framework from inside your vault:** `.claude/tools/sync_framework.sh export <path-to-a-clone-of-this-repo>` copies the framework files — never your notes — into the clone, ready to review, commit and PR.
 
 ## Credits
 
