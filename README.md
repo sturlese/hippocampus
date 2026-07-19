@@ -109,6 +109,7 @@ A typical personal note yields **1 source page + 0–4 entity/concept pages**. T
 │   ├── sources/  entities/  concepts/  projects/  notes/  meta/
 ├── _templates/          # skeletons per note type
 ├── _attachments/        # images/PDFs referenced by pages
+├── docs/                # framework docs: the ingest walkthrough, design rationale
 ├── .claude/
 │   ├── skills/          # ingest · lint · save
 │   ├── hooks/           # per-turn: hot-cache refresh + local auto-commit
