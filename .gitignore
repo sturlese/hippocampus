@@ -1,0 +1,10 @@
+.DS_Store
+
+# Obsidian workspace state (machine-specific); keep shared config tracked
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+
+# Claude Code local state
+.claude/settings.local.json
+.claude/hooks/hook-errors.log

@@ -1,0 +1,11 @@
+/* Hippocampus — folder colors in the file explorer.
+   Matches the graph.json color groups: concepts blue, entities purple,
+   sources green, projects orange, notes yellow, meta gray. */
+
+.nav-folder-title[data-path="wiki/concepts"] { color: #4f9cf0; font-weight: 600; }
+.nav-folder-title[data-path="wiki/entities"] { color: #a78bfa; font-weight: 600; }
+.nav-folder-title[data-path="wiki/sources"]  { color: #6fcf7c; font-weight: 600; }
+.nav-folder-title[data-path="wiki/projects"] { color: #f2994a; font-weight: 600; }
+.nav-folder-title[data-path="wiki/notes"]    { color: #f2c94c; font-weight: 600; }
+.nav-folder-title[data-path="wiki/meta"],
+.nav-folder-title[data-path="inbox"] { color: var(--text-faint); }

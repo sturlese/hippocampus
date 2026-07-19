@@ -1,0 +1,15 @@
+{
+  "userIgnoreFilters": [
+    "inbox/",
+    "_templates/",
+    "assets/",
+    "README.md",
+    "CLAUDE.md"
+  ],
+  "attachmentFolderPath": "_attachments",
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "wiki/notes",
+  "useMarkdownLinks": false,
+  "showUnsupportedFiles": false
+}
