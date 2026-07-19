@@ -139,9 +139,11 @@ Two hooks, both readable shell:
 - **SessionStart** — `cat wiki/hot.md`, so a new session begins with recent context already
   loaded. This is why "what were we working on?" is answered instantly.
 - **Stop** — if wiki pages changed but `hot.md` was not refreshed, the stop is blocked and
-  the cache gets rewritten first. Then the vault is committed locally
-  (`git add -A -- inbox wiki _templates _attachments CLAUDE.md README.md`). Pushing to your
-  own remote stays a manual decision, always.
+  the cache gets rewritten first. Then vault content is committed locally
+  (`git add -A -- inbox wiki _attachments`). Framework files (`CLAUDE.md`, `_templates/`, …)
+  are never auto-committed: they change rarely and deliberately, and
+  `sync_framework.sh` counts on being able to leave them uncommitted for you to review.
+  Pushing to your own remote stays a manual decision, always.
 
 ## What can be verified without a model
 

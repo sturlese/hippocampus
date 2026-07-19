@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # Stop hook: (1) if wiki content changed after the last hot.md refresh, ask Claude
 # to update the hot cache before stopping; (2) once hot.md is fresh, auto-commit
-# the vault. Loop-safe via the stop_hook_active flag Claude Code sets when a stop
+# vault CONTENT (inbox/ wiki/ _attachments/). Framework files (CLAUDE.md,
+# _templates/, …) are never auto-committed: they change rarely and deliberately,
+# and sync_framework.sh relies on being able to leave them uncommitted for
+# review. Loop-safe via the stop_hook_active flag Claude Code sets when a stop
 # was already blocked once.
 set -u
 input=$(cat 2>/dev/null || true)
@@ -25,7 +28,7 @@ fi
 
 if [ -d .git ]; then
   ERRLOG=".claude/hooks/hook-errors.log"
-  git add -A -- inbox wiki _templates _attachments CLAUDE.md README.md 2>>"$ERRLOG"
+  git add -A -- inbox wiki _attachments 2>>"$ERRLOG"
   if ! git diff --cached --quiet 2>/dev/null; then
     if ! git commit -q -m "vault: auto-commit $(date '+%Y-%m-%d %H:%M')" 2>>"$ERRLOG"; then
       printf '%s auto-commit FAILED — vault changes are staged but NOT committed\n' \
