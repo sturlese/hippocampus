@@ -19,6 +19,7 @@ wiki/           The structured knowledge base. Everything Claude writes lives he
 └── meta/       Lint reports, dashboards (type: meta)
 _templates/     Canonical skeletons per note type. THE source of truth for page structure.
 _attachments/   Images/PDFs referenced by wiki pages.
+docs/           Framework documentation (upstream, part of the template). NOT vault content — never file notes here.
 ```
 
 ## Frontmatter schema
