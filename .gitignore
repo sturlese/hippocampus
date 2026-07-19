@@ -8,3 +8,6 @@
 # Claude Code local state
 .claude/settings.local.json
 .claude/hooks/hook-errors.log
+
+# Marks a checkout of the template repo itself (disables vault-only hooks)
+.claude/template.local

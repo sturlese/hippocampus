@@ -80,6 +80,12 @@ When new information conflicts with an existing page, do NOT silently overwrite.
 
 Hooks (configured in `.claude/settings.json`): `hot.md` is injected at session start; after each turn that changed wiki pages, a Stop hook asks Claude to refresh `hot.md`, then auto-commits the vault content locally (push is manual; commit failures are logged to `.claude/hooks/hook-errors.log`).
 
+## Framework vs. content
+
+The framework — `CLAUDE.md`, `.claude/`, `_templates/`, `docs/`, `README.md`, `.obsidian/` config — is developed in the open at https://github.com/sturlese/hippocampus. Content (`inbox/`, `wiki/`, `_attachments/`) belongs to this vault alone and never leaves it.
+
+If a session edits framework files **in a vault**, remind the user that the change lives in the wrong repo and should be ported: `.claude/tools/sync_framework.sh export <template-checkout>`, then commit and PR there. To bring the latest published framework into a vault: `.claude/tools/sync_framework.sh update`. Neither command ever touches content or commits anything.
+
 ## Using this vault from other Claude Code projects
 
 Add to that project's CLAUDE.md:
