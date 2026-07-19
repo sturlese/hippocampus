@@ -8,6 +8,9 @@ input=$(cat 2>/dev/null || true)
 
 cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
 [ -d wiki ] || exit 0
+# Template checkouts are not vaults: no hot-cache enforcement, no auto-commit.
+# The marker is untracked (see .gitignore) — create it only in a template clone.
+[ -f .claude/template.local ] && exit 0
 
 stop_active=0
 printf '%s' "$input" | grep -q '"stop_hook_active"[[:space:]]*:[[:space:]]*true' && stop_active=1

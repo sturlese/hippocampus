@@ -34,7 +34,7 @@ This substrate — markdown + YAML frontmatter, typed pages, `index.md`/`log.md`
 - 🩺 **Deterministic linter** — dead wikilinks, orphan pages, duplicate names, alias collisions, frontmatter gaps, index drift: caught by a script for free, not by burning tokens.
 - 🧱 **Sequential by design** — batch ingests run one source at a time: no locks, no merge frameworks, no silent overwrites. A few extra minutes beat lost knowledge.
 - 🔒 **Untrusted-source discipline** — ingested content is data, never instructions; skills run with narrowly scoped shell permissions.
-- 📤 **Template publisher** — one command exports the framework (never your notes, never your git history) to a public repo like this one. It refuses to ship any file not declared in an explicit manifest, so a stray personal note can't ride along.
+- 🔁 **Framework updates** — the framework is developed in the open in this repo; `sync_framework.sh update` pulls the latest structure into your existing vault without ever touching your notes, and `export` ports your improvements back to a template checkout so you can PR them.
 
 ## Quick start
 
@@ -56,7 +56,7 @@ Then drop a messy note into `inbox/` and tell Claude: **"ingest"**.
 
 To browse: Obsidian → *Manage vaults → Open folder as vault* → select the directory. Graph colors, folder colors and search exclusions come pre-configured.
 
-> ⚠️ Your vault repo will contain your notes — keep it **private**. Publishing the framework for others is what `publish_template.sh` is for.
+> ⚠️ Your vault repo will contain your notes — keep it **private**. The framework itself lives in the open here; pull future improvements into your vault with `.claude/tools/sync_framework.sh update`.
 
 ## Usage
 
@@ -112,7 +112,7 @@ A typical personal note yields **1 source page + 0–4 entity/concept pages**. T
 ├── .claude/
 │   ├── skills/          # ingest · lint · save
 │   ├── hooks/           # per-turn: hot-cache refresh + local auto-commit
-│   ├── tools/           # vault_lint.py · publish_template.sh
+│   ├── tools/           # vault_lint.py · sync_framework.sh
 │   └── settings.json    # hook wiring + permissions
 └── .obsidian/           # pre-configured graph/folder colors, exclusions
 ```
@@ -131,8 +131,8 @@ Sonnet with default effort is enough for daily ingest/query/save — the contrac
 
 **Multiple machines?** It's a git repo: push to your private remote and pull elsewhere. Hooks and skills travel with it.
 
-**How do I share my setup without sharing my notes?**
-`.claude/tools/publish_template.sh` — dry run by default; `--push` exports the framework with a fresh single-commit history (seeds come from your pristine scaffold commit) and a safety net that refuses to ship anything from `inbox/`, `wiki/` content or `_attachments/`.
+**How do I get framework improvements into my existing vault?**
+`.claude/tools/sync_framework.sh update` — it fetches this repo, overlays only framework files (never `inbox/`, `wiki/` or `_attachments/`), and leaves everything uncommitted for you to review. `diff` shows the drift without writing; `export <checkout>` moves your own framework improvements to a local clone of this repo so you can open a PR.
 
 ## Credits
 
