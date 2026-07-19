@@ -7,9 +7,12 @@
 #
 #   - it NEVER touches vault content (inbox/, wiki/, _attachments/),
 #   - it NEVER commits or pushes — every change lands uncommitted, for a human
-#     to review and commit, and
+#     to review and commit,
 #   - it REFUSES to overwrite files carrying uncommitted local edits — commit
-#     or stash them first, so nothing of yours can ever be lost.
+#     or stash them first, so nothing of yours can ever be lost, and
+#   - export ships ONLY files the template already tracks: anything else found
+#     in a framework directory (a personal skill, plugin data, a misfiled note)
+#     is skipped and listed; opt genuinely new framework files in with --add.
 #
 # Usage (run from inside your vault):
 #   sync_framework.sh update              copy the latest published framework into this vault
@@ -17,6 +20,7 @@
 #   sync_framework.sh export <checkout>   copy this vault's framework into a local clone of the
 #                                         template (review it there, commit, open a PR)
 #   sync_framework.sh <mode> --repo URL   use a different template repo (e.g. your fork)
+#   sync_framework.sh export <checkout> --add <path>   include a NEW file or dir in the export
 set -euo pipefail
 
 TEMPLATE_REPO="https://github.com/sturlese/hippocampus"
@@ -30,12 +34,19 @@ LOCAL_FILES='(^|/)(\.DS_Store|hook-errors\.log|settings\.local\.json|template\.l
 
 MODE="${1:-}"; shift || true
 DEST=""
+ADD_PATHS=()
 case "$MODE" in
   update|diff) ;;
   export) DEST="${1:?export needs the path to a template checkout}"; shift ;;
-  *) sed -n '2,19p' "$0"; exit 2 ;;
+  *) sed -n '2,23p' "$0"; exit 2 ;;
 esac
-[ "${1:-}" = "--repo" ] && TEMPLATE_REPO="${2:?--repo needs a URL}"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --repo) TEMPLATE_REPO="${2:?--repo needs a URL}"; shift 2 ;;
+    --add)  ADD_PATHS+=("${2:?--add needs a path}"); shift 2 ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
 
 [ -d .git ] || { echo "fatal: run this from the root of your vault (a git repository)" >&2; exit 1; }
 if [ -f .claude/template.local ]; then
@@ -112,10 +123,31 @@ fi
 [ -d "$DEST/.git" ] || { echo "fatal: $DEST is not a git checkout of the template" >&2; exit 1; }
 [ -f "$DEST/CLAUDE.md" ] || { echo "fatal: $DEST does not look like the template (no CLAUDE.md)" >&2; exit 1; }
 
-copied=0
+# The template's git index is the allowlist: a file it does not track is
+# personal (your own skill, plugin data, a misfiled note) until said otherwise
+# with --add. This is what keeps a blind directory copy from leaking.
+tracked=$(git -C "$DEST" ls-files)
+
+is_tracked() { printf '%s\n' "$tracked" | grep -qxF "$1"; }
+
+is_added() {
+  local f="$1" p
+  for p in ${ADD_PATHS[@]+"${ADD_PATHS[@]}"}; do
+    p="${p%/}"; p="${p#./}"
+    [ "$f" = "$p" ] && return 0
+    case "$f" in "$p"/*) return 0 ;; esac
+  done
+  return 1
+}
+
+copied=0; skipped=""
 for root in "${FRAMEWORK_PATHS[@]}"; do
   [ -e "$root" ] || continue
   while IFS= read -r f; do
+    if ! is_tracked "$f" && ! is_added "$f"; then
+      skipped="$skipped$f"$'\n'
+      continue
+    fi
     if [ ! -f "$DEST/$f" ] || ! cmp -s "$f" "$DEST/$f"; then
       mkdir -p "$DEST/$(dirname "$f")"
       cp "$f" "$DEST/$f"
@@ -124,6 +156,13 @@ for root in "${FRAMEWORK_PATHS[@]}"; do
     fi
   done < <(find "$root" -type f 2>/dev/null | sed 's|^\./||' | grep -vE "$LOCAL_FILES")
 done
+
+if [ -n "$skipped" ]; then
+  echo
+  echo "Skipped — the template does not track these, so they stay home:"
+  printf '%s' "$skipped" | sed 's/^/  ? /'
+  echo "A genuinely new framework file? Re-run adding: --add <path>"
+fi
 
 if [ "$copied" -eq 0 ]; then
   echo "Nothing to export — the checkout already matches this vault's framework."

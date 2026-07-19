@@ -142,14 +142,14 @@ Sonnet with default effort is enough for daily ingest/query/save — the contrac
 **Multiple machines?** It's a git repo: push to your private remote and pull elsewhere. Hooks and skills travel with it. Started with Option B? Create an empty **private** repo on your host, then `git remote add origin <url> && git push -u origin main`.
 
 **How do I get framework improvements into my existing vault?**
-`.claude/tools/sync_framework.sh update` — it fetches this repo, overlays only framework files (never `inbox/`, `wiki/` or `_attachments/`), and leaves everything uncommitted for you to review. It refuses to overwrite files carrying uncommitted local edits, so nothing of yours can be lost. `diff` shows the drift without writing; `export <checkout>` moves your own framework improvements to a local clone of this repo so you can open a PR.
+`.claude/tools/sync_framework.sh update` — it fetches this repo, overlays only framework files (never `inbox/`, `wiki/` or `_attachments/`), and leaves everything uncommitted for you to review. It refuses to overwrite files carrying uncommitted local edits, so nothing of yours can be lost. `diff` shows the drift without writing; `export <checkout>` moves your own framework improvements to a local clone of this repo so you can open a PR — shipping only files the template already tracks, so personal extras in framework folders (your own skills, plugin data) stay home unless you `--add` them.
 
 ## Contributing
 
 The framework is developed here, in the open — issues and PRs welcome. Two ways in:
 
 - **Hacking on this repo directly:** clone it and run `touch .claude/template.local` first. The marker (gitignored) tells the hooks this checkout is a template, not a vault, so hot-cache enforcement and auto-commits stay off.
-- **You improved the framework from inside your vault:** `.claude/tools/sync_framework.sh export <path-to-a-clone-of-this-repo>` copies the framework files — never your notes — into the clone, ready to review, commit and PR.
+- **You improved the framework from inside your vault:** `.claude/tools/sync_framework.sh export <path-to-a-clone-of-this-repo>` copies the framework files — never your notes, and only files the template already tracks (new ones need an explicit `--add`) — into the clone, ready to review, commit and PR.
 
 ## Credits
 

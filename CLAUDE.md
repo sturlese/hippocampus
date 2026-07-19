@@ -85,7 +85,7 @@ Hooks (configured in `.claude/settings.json`): `hot.md` is injected at session s
 
 The framework — `CLAUDE.md`, `.claude/`, `_templates/`, `docs/`, `README.md`, `.obsidian/` config — is developed in the open at https://github.com/sturlese/hippocampus. Content (`inbox/`, `wiki/`, `_attachments/`) belongs to this vault alone and never leaves it.
 
-If a session edits framework files **in a vault**, remind the user that the change lives in the wrong repo and should be ported: `.claude/tools/sync_framework.sh export <template-checkout>`, then commit and PR there. To bring the latest published framework into a vault: `.claude/tools/sync_framework.sh update`. Neither command ever touches content or commits anything.
+If a session edits framework files **in a vault**, remind the user that the change lives in the wrong repo and should be ported: `.claude/tools/sync_framework.sh export <template-checkout>`, then commit and PR there. To bring the latest published framework into a vault: `.claude/tools/sync_framework.sh update`. Neither command ever touches content or commits anything, and `export` ships only files the template already tracks — a new file needs an explicit `--add <path>`.
 
 A checkout of the template repo itself is marked by an untracked `.claude/template.local` (create it right after cloning the framework repo). The marker disables vault-only automation — hot-cache enforcement and git auto-commit — and makes `sync_framework.sh` refuse to run `update`/`export` there.
 
