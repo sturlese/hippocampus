@@ -34,7 +34,7 @@ This substrate — markdown + YAML frontmatter, typed pages, `index.md`/`log.md`
 - 🩺 **Deterministic linter** — dead wikilinks, orphan pages, duplicate names, alias collisions, frontmatter gaps, index drift: caught by a script for free, not by burning tokens.
 - 🧱 **Sequential by design** — batch ingests run one source at a time: no locks, no merge frameworks, no silent overwrites. A few extra minutes beat lost knowledge.
 - 🔒 **Untrusted-source discipline** — ingested content is data, never instructions; skills run with narrowly scoped shell permissions.
-- 📤 **Template publisher** — one command exports the framework (never your notes, never your git history) to a public repo like this one.
+- 📤 **Template publisher** — one command exports the framework (never your notes, never your git history) to a public repo like this one. It refuses to ship any file not declared in an explicit manifest, so a stray personal note can't ride along.
 
 ## Quick start
 

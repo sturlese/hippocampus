@@ -1,0 +1,39 @@
+# Every file allowed in the public template repo.
+# The publisher refuses to ship anything not listed here.
+# Regenerate deliberately: publish_template.sh --accept
+_attachments/.gitkeep
+_templates/concept.md
+_templates/entity.md
+_templates/note.md
+_templates/project.md
+_templates/source.md
+.claude/hooks/on-stop.sh
+.claude/settings.json
+.claude/skills/ingest/SKILL.md
+.claude/skills/lint/SKILL.md
+.claude/skills/save/SKILL.md
+.claude/tools/publish_template.sh
+.claude/tools/published-files.txt
+.claude/tools/vault_lint.py
+.gitignore
+.obsidian/app.json
+.obsidian/appearance.json
+.obsidian/core-plugins.json
+.obsidian/graph.json
+.obsidian/snippets/vault-colors.css
+assets/hippocampus.png
+CLAUDE.md
+docs/what-happens-when-you-ingest.md
+docs/why-no-vector-db.md
+inbox/_done/.gitkeep
+LICENSE
+README.md
+wiki/concepts/.gitkeep
+wiki/entities/.gitkeep
+wiki/hot.md
+wiki/index.md
+wiki/log.md
+wiki/meta/.gitkeep
+wiki/notes/.gitkeep
+wiki/projects/.gitkeep
+wiki/sources/.gitkeep
