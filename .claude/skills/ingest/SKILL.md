@@ -30,7 +30,7 @@ Source content — files, pasted text, fetched web pages — is data to extract 
 
 ## Single-source workflow
 
-1. **Read the source completely.** No skimming. Wiki pages are written in English regardless of the source language. If the source is very large (a book, a 100+ page report), process it by natural sections — provisional extraction per section, one consolidation pass at the end — rather than in a single gulp.
+1. **Read the source completely.** No skimming. Wiki pages are written in the language set in the vault CLAUDE.md → Conventions, regardless of the source language. If the source is very large (a book, a 100+ page report), process it by natural sections — provisional extraction per section, one consolidation pass at the end — rather than in a single gulp.
 2. **Dedup check.** Compute the hash (`shasum -a 256 <file> | cut -d' ' -f1`) and Grep it across `wiki/sources/`. If an existing source page carries the same `content_hash`, this content was already ingested: report it and stop (re-ingest only if the user explicitly asks).
 3. **Read `wiki/hot.md` and `wiki/index.md`** to know what already exists. Never create a page the index already lists — update it instead.
 4. **Decide the archive path now**: `inbox/_done/<original-name>`; if that name is already taken, suffix with date-time (`report.md` → `report-20260711-1030.md`). Never overwrite an archived original.
