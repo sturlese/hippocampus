@@ -26,7 +26,7 @@ This substrate — markdown + YAML frontmatter, typed pages, `index.md`/`log.md`
 
 ## Features
 
-- 📥 **Inbox workflow** — drop notes in any format or language; originals are preserved untouched in `inbox/_done/` with full provenance links.
+- 📥 **Inbox workflow** — drop notes in any format or language; originals are preserved untouched in `inbox/_done/`, with the archive path recorded on every source page.
 - 🗂️ **Structured consolidation** — typed pages (source / entity / concept / project / note) with flat-YAML frontmatter, wikilinks and per-type templates.
 - 🧭 **The trio** — `index.md` (master catalog), `log.md` (append-only journal), `hot.md` (≤500-word session cache): cheap retrieval, full auditability, session-to-session memory.
 - 🪝 **Session hooks** — the hot cache is auto-injected when a session starts; at session end Claude is forced to refresh it and vault content auto-commits to git.
