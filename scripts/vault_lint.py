@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic health check for a Hippocampus vault.
+"""Deterministic health check for a Hippocampus knowledge vault.
 
 Scans wiki/**/*.md and reports:
   - frontmatter problems (missing block, missing/invalid required fields,

@@ -5,7 +5,7 @@ description: >
   orphans, duplicates, index drift) plus editorial checks (stale claims, unlinked
   mentions, missing pages), then fixes what the user approves. Triggers on: "lint",
   "revisa el vault", "health check", "chequea el wiki", "limpia el vault", "wiki audit".
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash(python3 .claude/tools/vault_lint.py:*)
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(python3 scripts/vault_lint.py:*)
 ---
 
 # lint: vault health check
@@ -15,7 +15,7 @@ Two passes: the Python tool finds the mechanical problems for free; you add the 
 ## 1. Mechanical pass
 
 ```bash
-python3 .claude/tools/vault_lint.py --json
+python3 scripts/vault_lint.py --json
 ```
 
 Covers: frontmatter validity, dead wikilinks, broken embeds, duplicate basenames, orphan pages, pages missing from the index, dead index entries, empty sections, hot-cache size. Trust its output; don't re-derive these by reading pages.
@@ -24,7 +24,7 @@ Covers: frontmatter validity, dead wikilinks, broken embeds, duplicate basenames
 
 Scale to vault size — sample recent pages if the vault is large:
 
-- **Unlinked mentions**: entity/concept names that appear as plain text where a `[[wikilink]]` should be. Grep for the titles of existing pages across `wiki/`.
+- **Unlinked mentions**: entity/concept names that appear as plain text where a `[[wikilink]]` should be. Search for the titles of existing pages across `wiki/`.
 - **Missing pages**: a concept/entity mentioned across 3+ pages without a page of its own → suggest creating one.
 - **Stale claims**: pages whose claims newer pages contradict, without a contradiction callout.
 - **Aging seeds**: `status: seed` pages untouched for 30+ days — develop, merge, or delete.

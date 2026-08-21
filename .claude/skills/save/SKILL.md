@@ -3,7 +3,7 @@ name: save
 description: >
   File the current conversation's valuable content (analysis, decision, session summary)
   as a structured wiki note so it isn't lost in chat history. Triggers on: "save this",
-  "guarda esto", "guárdalo en el wiki", "/save", "file this", "apunta esto",
+  "guarda esto", "guárdalo en el wiki", "/save", "$save", "file this", "apunta esto",
   "guarda esta conversación", "save this session".
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
@@ -24,7 +24,7 @@ Extract the durable knowledge from the current conversation and write it as a wi
    | The conversation defined a new concept | `concept` | `wiki/concepts/` |
    | The conversation was about an ongoing project | update the `project` page | `wiki/projects/` |
 3. **Name it** — short, descriptive, Title Case, unique. If the user gave a name, use it; otherwise propose one and ask only if the content is ambiguous.
-4. **Write the page** from the matching `_templates/` skeleton: declarative present tense, in the language set in the vault CLAUDE.md → Conventions, self-contained (readable cold in 6 months), every mentioned entity/concept wikilinked, claims cited as `(Source: [[Page]])`. If it answers a specific question, put the question verbatim in the `question:` field.
+4. **Write the page** from the matching `_templates/` skeleton: declarative present tense, in the language set in the vault `CLAUDE.md` → Conventions, self-contained (readable cold in 6 months), every mentioned entity/concept wikilinked, claims cited as `(Source: [[Page]])`. If it answers a specific question, put the question verbatim in the `question:` field.
 5. **Update `wiki/index.md`**, **prepend to `wiki/log.md`** (`## [YYYY-MM-DD] save | <Title>`), **refresh `wiki/hot.md`**.
 6. **Confirm**: "Saved as [[Title]] in wiki/<folder>/."
 

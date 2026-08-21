@@ -1,19 +1,27 @@
 #!/usr/bin/env bash
-# Stop hook: (1) if wiki content changed after the last hot.md refresh, ask Claude
+# Stop hook: (1) if wiki content changed after the last hot.md refresh, ask the agent
 # to update the hot cache before stopping; (2) once hot.md is fresh, auto-commit
-# vault CONTENT (inbox/ wiki/ _attachments/). Framework files (CLAUDE.md,
-# _templates/, …) are never auto-committed: they change rarely and deliberately,
+# vault CONTENT (inbox/ wiki/ _attachments/). Framework files (AGENTS.md,
+# CLAUDE.md, _templates/, …) are never auto-committed: they change rarely and deliberately,
 # and sync_framework.sh relies on being able to leave them uncommitted for
-# review. Loop-safe via the stop_hook_active flag Claude Code sets when a stop
-# was already blocked once.
+# review. Loop-safe via the stop_hook_active flag supplied after a Stop hook
+# has already continued the turn once.
 set -u
 input=$(cat 2>/dev/null || true)
 
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+  project_root="$CLAUDE_PROJECT_DIR"
+else
+  project_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+fi
+
+cd "$project_root" || exit 0
 [ -d wiki ] || exit 0
 # Template checkouts are not vaults: no hot-cache enforcement, no auto-commit.
-# The marker is untracked (see .gitignore) — create it only in a template clone.
-[ -f .claude/template.local ] && exit 0
+# The neutral marker is preferred; the old Claude-specific marker remains supported.
+if [ -f .hippocampus-template.local ] || [ -f .claude/template.local ]; then
+  exit 0
+fi
 
 stop_active=0
 printf '%s' "$input" | grep -q '"stop_hook_active"[[:space:]]*:[[:space:]]*true' && stop_active=1
@@ -27,7 +35,8 @@ if [ "$stop_active" -eq 0 ] && [ -f wiki/hot.md ]; then
 fi
 
 if [ -d .git ]; then
-  ERRLOG=".claude/hooks/hook-errors.log"
+  mkdir -p .hippocampus
+  ERRLOG=".hippocampus/hook-errors.log"
   git add -A -- inbox wiki _attachments 2>>"$ERRLOG"
   if ! git diff --cached --quiet 2>/dev/null; then
     if ! git commit -q -m "vault: auto-commit $(date '+%Y-%m-%d %H:%M')" 2>>"$ERRLOG"; then

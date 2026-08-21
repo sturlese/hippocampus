@@ -1,0 +1,28 @@
+{
+  "description": "Hippocampus hot-cache and content auto-commit hooks.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "repo_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd); [ -f \"$repo_root/wiki/hot.md\" ] && cat \"$repo_root/wiki/hot.md\" || true",
+            "additionalContextLimit": 5000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "repo_root=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd \"$repo_root\" && bash scripts/on-stop.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

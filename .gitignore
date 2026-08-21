@@ -5,9 +5,11 @@
 .obsidian/workspace-mobile.json
 .obsidian/cache/
 
-# Claude Code local state
+# Agent local state
 .claude/settings.local.json
 .claude/hooks/hook-errors.log
+.hippocampus/hook-errors.log
 
 # Marks a checkout of the template repo itself (disables vault-only hooks)
+.hippocampus-template.local
 .claude/template.local

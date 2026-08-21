@@ -2,7 +2,14 @@
   "userIgnoreFilters": [
     "inbox/",
     "_templates/",
+    ".agents/",
+    ".claude/",
+    ".codex/",
+    ".hippocampus/",
+    "scripts/",
     "assets/",
+    "AGENTS.md",
+    "CHANGELOG.md",
     "README.md",
     "CLAUDE.md"
   ],
