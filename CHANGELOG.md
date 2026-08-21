@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add first-class Codex instructions, skills, and lifecycle hooks alongside
-  Claude Code support.
-- Add shared, agent-neutral scripts and canonical workflows for both clients.
+- Add first-class Codex adapters and lifecycle hooks alongside Claude Code's
+  canonical project contract and workflows.
+- Add shared, agent-neutral scripts while keeping Claude Code as the native host.
 
 ## [0.1.0] - 2026-08-21
 

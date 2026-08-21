@@ -7,8 +7,8 @@ embedded somewhere, and a while later answers came out. Fine until an answer is 
 which point there is nothing to look at.
 
 So here is the whole pipeline, step by step. Everything below is defined in
-[`.agents/skills/ingest/SKILL.md`](../.agents/skills/ingest/SKILL.md) and
-[`AGENTS.md`](../AGENTS.md) — you can read the rules yourself, and change them, because they
+[`CLAUDE.md`](../CLAUDE.md) and
+[`.claude/skills/ingest/SKILL.md`](../.claude/skills/ingest/SKILL.md) — you can read the rules yourself, and change them, because they
 are prose in your own repository rather than behaviour compiled into a tool.
 
 Say you drop a messy note into `inbox/` and type `ingest`.
@@ -121,7 +121,7 @@ synonyms, because the index may not use your question's wording. Answers cite th
 as `(Source: [[Page Name]])`, and when the vault genuinely does not know something, it says
 so instead of answering from training data.
 
-A full-vault scan never happens for a routine question. That is a rule in `AGENTS.md`, and
+A full-vault scan never happens for a routine question. That is a rule in `CLAUDE.md`, and
 you can read it.
 
 ## Batching

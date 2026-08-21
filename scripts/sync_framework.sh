@@ -121,7 +121,10 @@ fi
 
 # ------------------------------------------------------------------------ export
 [ -d "$DEST/.git" ] || { echo "fatal: $DEST is not a git checkout of the template" >&2; exit 1; }
-[ -f "$DEST/AGENTS.md" ] || { echo "fatal: $DEST does not look like the template (no AGENTS.md)" >&2; exit 1; }
+[ -f "$DEST/CLAUDE.md" ] && [ -f "$DEST/AGENTS.md" ] || {
+  echo "fatal: $DEST does not look like a Hippocampus template (requires both CLAUDE.md and AGENTS.md)" >&2
+  exit 1
+}
 
 # The template's git index is the allowlist: a file it does not track is
 # personal (your own skill, plugin data, a misfiled note) until said otherwise

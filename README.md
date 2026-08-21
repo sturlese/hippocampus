@@ -1,8 +1,8 @@
 ![Hippocampus — your personal brain. Capture, connect, and evolve your knowledge with Claude Code or Codex.](assets/hippocampus-dual-agent.png)
 
-**A deliberately lite personal brain: Obsidian to browse, Claude Code or Codex for everything else. Zero dependencies, zero infrastructure — the intelligence lives in the structure.**
+**A deliberately lite personal brain: Obsidian to browse, Claude Code for everything else — with Codex support. Zero dependencies, zero infrastructure — the intelligence lives in the structure.**
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg) ![Claude Code](https://img.shields.io/badge/Claude_Code-skills_%2B_hooks-8B5CF6) ![Codex](https://img.shields.io/badge/Codex-AGENTS.md_%2B_skills_%2B_hooks-10A37F) ![Obsidian](https://img.shields.io/badge/Obsidian-no_plugins_required-7c3aed) ![Python](https://img.shields.io/badge/Python-3.10%2B_stdlib_only-3776AB) ![Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg) ![Claude Code](https://img.shields.io/badge/Claude_Code-canonical_skills_%2B_hooks-8B5CF6) ![Codex](https://img.shields.io/badge/Codex-AGENTS.md_adapter_%2B_hooks-10A37F) ![Obsidian](https://img.shields.io/badge/Obsidian-no_plugins_required-7c3aed) ![Python](https://img.shields.io/badge/Python-3.10%2B_stdlib_only-3776AB) ![Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen)
 
 Drop messy notes into an inbox. Your coding agent consolidates them into a structured, cross-linked Obsidian vault — YAML frontmatter, wikilinks, a master index — and remembers where you left off between sessions. You talk to your notes from the terminal; Obsidian is just the (beautiful) viewer. Nothing is hidden: [every step of that pipeline](docs/what-happens-when-you-ingest.md) is a file you can open.
 
@@ -38,14 +38,14 @@ This substrate — markdown + YAML frontmatter, typed pages, `index.md`/`log.md`
 
 ## Quick start
 
-**Requirements:** [Claude Code](https://claude.com/claude-code) or [Codex](https://developers.openai.com/codex/) · git · Python 3.10+ · [Obsidian](https://obsidian.md) (optional, for browsing)
+**Requirements:** [Claude Code](https://claude.com/claude-code) (native) or [Codex](https://developers.openai.com/codex/) (supported) · git · Python 3.10+ · [Obsidian](https://obsidian.md) (optional, for browsing)
 
 **Option A — GitHub-backed (recommended).** Click **[Use this template](https://github.com/new?template_name=hippocampus&template_owner=sturlese)**, create a **private** repo, then:
 
 ```bash
 git clone https://github.com/YOU/my-brain.git
 cd my-brain
-claude  # or: codex
+claude  # Codex is also supported: codex
 ```
 
 Fresh history, private remote already wired — backup is just `git push`.
@@ -56,7 +56,7 @@ Fresh history, private remote already wired — backup is just `git push`.
 git clone https://github.com/sturlese/hippocampus my-brain
 cd my-brain
 rm -rf .git && git init && git add -A && git commit -m "My brain, day zero"
-claude  # or: codex
+claude  # Codex is also supported: codex
 ```
 
 You can wire a private remote later — see the FAQ.
@@ -83,7 +83,7 @@ A typical personal note yields **1 source page + 0–4 entity/concept pages**. T
 ## How it works
 
 ```
- you                 Claude Code / Codex                    Obsidian
+ you          Claude Code (native) / Codex (supported)      Obsidian
   │                          │                                  │
   │  messy note              │                                  │
   ├───────────► inbox/       │                                  │
@@ -101,15 +101,15 @@ A typical personal note yields **1 source page + 0–4 entity/concept pages**. T
   │                          │ auto-injected → context restored │
 ```
 
-- **The contract lives in `AGENTS.md`** (vault layout, frontmatter schema, conventions, read order). Codex loads it directly; `CLAUDE.md` points Claude Code to the same contract. Canonical skills live in `.agents/skills/`, with thin Claude Code adapters in `.claude/skills/`; `_templates/` are the canonical page skeletons.
+- **The canonical contract lives in `CLAUDE.md`** (vault layout, frontmatter schema, conventions, read order). Claude Code loads it directly; `AGENTS.md` directs Codex to the same contract. Canonical workflows live in `.claude/skills/`, with thin Codex adapters in `.agents/skills/`; `_templates/` are the canonical page skeletons.
 - **Read discipline:** questions never trigger a full-vault scan. Hot cache (~500 tokens) → index (~1 line/page) → only the pages that matter.
 - **Git flow:** content auto-commits locally after each turn that changed it; pushing to your private remote stays a manual decision.
 
 ## Vault structure
 
 ```
-├── AGENTS.md            # canonical contract: schema, conventions, read order
-├── CLAUDE.md            # Claude Code bootstrap for the shared contract
+├── CLAUDE.md            # canonical contract: schema, conventions, read order
+├── AGENTS.md            # Codex adapter for the canonical contract
 ├── inbox/               # messy notes land here (immutable)
 │   └── _done/           # processed originals (provenance)
 ├── wiki/
@@ -120,10 +120,10 @@ A typical personal note yields **1 source page + 0–4 entity/concept pages**. T
 ├── _templates/          # skeletons per note type
 ├── _attachments/        # images/PDFs referenced by pages
 ├── docs/                # framework docs: the ingest walkthrough, design rationale
-├── .agents/skills/      # canonical ingest · lint · save workflows
 ├── .claude/
-│   ├── skills/          # thin Claude Code skill adapters
+│   ├── skills/          # canonical Claude Code ingest · lint · save workflows
 │   └── settings.json    # Claude Code hook wiring + permissions
+├── .agents/skills/      # thin Codex workflow adapters
 ├── .codex/hooks.json    # Codex hook wiring
 ├── scripts/             # shared hook, linter and framework sync tools
 └── .obsidian/           # pre-configured graph/folder colors, exclusions
@@ -139,7 +139,7 @@ The default model in either agent is enough for daily ingest/query/save — the 
 
 **Do I need to keep Obsidian open?** No. Obsidian is a viewer; everything works from the terminal.
 
-**Can the wiki be in another language?** Yes — pages are written in English by default; change one line in `AGENTS.md` → Conventions.
+**Can the wiki be in another language?** Yes — pages are written in English by default; change one line in `CLAUDE.md` → Conventions.
 
 **Multiple machines?** It's a git repo: push to your private remote and pull elsewhere. Hooks and skills travel with it. Started with Option B? Create an empty **private** repo on your host, then `git remote add origin <url> && git push -u origin main`.
 
