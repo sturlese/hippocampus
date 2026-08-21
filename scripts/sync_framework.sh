@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # sync_framework.sh — keep a vault's FRAMEWORK in sync with the published template.
 #
-# The framework (CLAUDE.md, .claude/, _templates/, docs/, .obsidian/, README, …)
+# The framework (agent configs, scripts, templates, docs, Obsidian config, …)
 # is developed in the open at TEMPLATE_REPO. A vault is a private instance of it.
 # This tool moves framework files between the two, and nothing else:
 #
@@ -11,7 +11,7 @@
 #   - it REFUSES to overwrite files carrying uncommitted local edits — commit
 #     or stash them first, so nothing of yours can ever be lost, and
 #   - export ships ONLY files the template already tracks: anything else found
-#     in a framework directory (a personal skill, plugin data, a misfiled note)
+#     in a framework directory (a personal skill, agent data, a misfiled note)
 #     is skipped and listed; opt genuinely new framework files in with --add.
 #
 # Usage (run from inside your vault):
@@ -28,9 +28,9 @@ TEMPLATE_REPO="https://github.com/sturlese/hippocampus"
 # Content roots — owned by the vault, never shipped by the framework.
 PERSONAL_ROOTS='^(wiki|inbox|_attachments)/'
 # Framework roots — what `export` copies out of a vault.
-FRAMEWORK_PATHS=(CLAUDE.md README.md LICENSE .gitignore .claude .obsidian _templates assets docs)
+FRAMEWORK_PATHS=(AGENTS.md CLAUDE.md CHANGELOG.md README.md LICENSE .gitignore .agents .claude .codex scripts .obsidian _templates assets docs)
 # Machine-local files that must never travel in either direction.
-LOCAL_FILES='(^|/)(\.DS_Store|hook-errors\.log|settings\.local\.json|template\.local|workspace(-mobile)?\.json)$'
+LOCAL_FILES='(^|/)(\.DS_Store|hook-errors\.log|settings\.local\.json|template\.local|\.hippocampus-template\.local|workspace(-mobile)?\.json)$'
 
 MODE="${1:-}"; shift || true
 DEST=""
@@ -49,8 +49,8 @@ while [ $# -gt 0 ]; do
 done
 
 [ -d .git ] || { echo "fatal: run this from the root of your vault (a git repository)" >&2; exit 1; }
-if [ -f .claude/template.local ]; then
-  echo "fatal: this is a template checkout, not a vault (.claude/template.local present)." >&2
+if [ -f .hippocampus-template.local ] || [ -f .claude/template.local ]; then
+  echo "fatal: this is a template checkout, not a vault (template marker present)." >&2
   echo "Edit the framework here directly; run update/export from a vault." >&2
   exit 1
 fi
@@ -121,7 +121,7 @@ fi
 
 # ------------------------------------------------------------------------ export
 [ -d "$DEST/.git" ] || { echo "fatal: $DEST is not a git checkout of the template" >&2; exit 1; }
-[ -f "$DEST/CLAUDE.md" ] || { echo "fatal: $DEST does not look like the template (no CLAUDE.md)" >&2; exit 1; }
+[ -f "$DEST/AGENTS.md" ] || { echo "fatal: $DEST does not look like the template (no AGENTS.md)" >&2; exit 1; }
 
 # The template's git index is the allowlist: a file it does not track is
 # personal (your own skill, plugin data, a misfiled note) until said otherwise

@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/on-stop.sh\""
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/on-stop.sh\""
           }
         ]
       }
@@ -24,7 +24,7 @@
   },
   "permissions": {
     "allow": [
-      "Bash(python3 .claude/tools/vault_lint.py*)",
+      "Bash(python3 scripts/vault_lint.py*)",
       "Bash(git status*)",
       "Bash(git log*)",
       "Bash(git diff*)",

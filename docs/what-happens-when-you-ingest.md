@@ -7,8 +7,8 @@ embedded somewhere, and a while later answers came out. Fine until an answer is 
 which point there is nothing to look at.
 
 So here is the whole pipeline, step by step. Everything below is defined in
-[`.claude/skills/ingest/SKILL.md`](../.claude/skills/ingest/SKILL.md) and
-[`CLAUDE.md`](../CLAUDE.md) — you can read the rules yourself, and change them, because they
+[`.agents/skills/ingest/SKILL.md`](../.agents/skills/ingest/SKILL.md) and
+[`AGENTS.md`](../AGENTS.md) — you can read the rules yourself, and change them, because they
 are prose in your own repository rather than behaviour compiled into a tool.
 
 Say you drop a messy note into `inbox/` and type `ingest`.
@@ -121,7 +121,7 @@ synonyms, because the index may not use your question's wording. Answers cite th
 as `(Source: [[Page Name]])`, and when the vault genuinely does not know something, it says
 so instead of answering from training data.
 
-A full-vault scan never happens for a routine question. That is a rule in `CLAUDE.md`, and
+A full-vault scan never happens for a routine question. That is a rule in `AGENTS.md`, and
 you can read it.
 
 ## Batching
@@ -140,14 +140,14 @@ Two hooks, both readable shell:
   loaded. This is why "what were we working on?" is answered instantly.
 - **Stop** — if wiki pages changed but `hot.md` was not refreshed, the stop is blocked and
   the cache gets rewritten first. Then vault content is committed locally
-  (`git add -A -- inbox wiki _attachments`). Framework files (`CLAUDE.md`, `_templates/`, …)
+  (`git add -A -- inbox wiki _attachments`). Framework files (`AGENTS.md`, `CLAUDE.md`, `_templates/`, …)
   are never auto-committed: they change rarely and deliberately, and
   `sync_framework.sh` counts on being able to leave them uncommitted for you to review.
   Pushing to your own remote stays a manual decision, always.
 
 ## What can be verified without a model
 
-`python3 .claude/tools/vault_lint.py` is deterministic — no tokens, no judgment, just true or
+`python3 scripts/vault_lint.py` is deterministic — no tokens, no judgment, just true or
 false:
 
 | Check | Catches |
